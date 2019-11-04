@@ -2,3 +2,9 @@
 # About the project
 
 *Write a short description about the course and add a link to your GitHub repository here. This is an R Markdown (.Rmd) file so you can use R Markdown syntax.*
+
+**Answer:**  The course is desighned to learn about data science. Data science is a multidisiplinary field, encompassing a wide range of topics such as *statistics, data visualization, and machine learninig*. To fulfill this goal, we need to code, and one of the open sources that provides this route is R. Our R codes can be put on GitHub, a website for git respiratories. And here is the link to my GitHub respiratory
+
+https://github.com/shohrek/IODS-project
+
+This is my first experience with GitHub and R. So I am really looking forward to learning these new skills that can be applied to my project data. 
