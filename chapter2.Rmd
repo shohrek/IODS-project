@@ -93,4 +93,3 @@ Using the **lm(output~inupt)** and **plot** functions, we can receive informatio
 
 
 
-
