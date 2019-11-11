@@ -90,8 +90,5 @@ Following the data wrangling process, the resultant dataset **dataset2** was rea
 
 For example:
 
-```{r Age, echo=FALSE}
-hist(Age)
-```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
