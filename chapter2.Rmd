@@ -6,12 +6,11 @@
 - Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods.
 - Assume the reader has no previous knowledge of your data or the more advanced methods you are using.
 
-<style>
-div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
-</style>
-<div class = "blue">
-**Diary-Session I**
 
-</div>
+
 
 This week, the bulk of the things I have learnt have centerd around the the introduction to R and GitHub. Following introduction to R, I found out that one way to keep track of the modifications made to a source code is using a version control system. One of the open source version control systems that is supported by RStudio is Git. Once I installed Git and activated that to **enable version control interface for RStudio projects**, I started to write about my learnings so far. To start writing my diary, I needed to utilize R Markdown, i.e. a file format by which we can write a dynamic document using R. Although this week has not been yet about coding, using RMarkdwon syntaxes provided me the chance to have a touch on coding with R. Also, I learnt how to modify and update my git respiratory. 
+
+```{r analysis}
+summary(cars)
+```
