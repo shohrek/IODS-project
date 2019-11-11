@@ -24,32 +24,24 @@ age <- lrn14$Age
 attitude <- lrn14$Attitude
 points <- lrn14$Points
 
-Questions <- cbind(deep,surf,stra,gender,age,attitude,points)
-Questions
+dataset1 <- cbind(deep,surf,stra,gender,age,attitude,points)
+dataset1
 
-Questions[Questions$points==0] <- NA
-Questions2 <- Questions[complete.cases(Questions),]
+dataset1[points==0] <- NA
+dataset2 <- dataset1[complete.cases(dataset1),]
 # Deep <- lrn14$Deep
 # Stra <- lrn14$Stra
 # Surf <- lrn14$Surf
-write.csv(Questions2, file = "data.csv", quote = TRUE, row.names = F)
+write.csv(dataset2, file = "data.csv", quote = TRUE, row.names = F)
 
 
 # Data Analysing
 # #reading the data
-dataset <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/learning2014.txt", sep=",", header=TRUE)
 
-age <- lrn14$age
-points <- lrn14$points
-attitude <- lrn14$attitude
-deep <- lrn14$deep
-stra <- lrn14$stra
-surf <- lrn14$surf
-gender <- lrn14$gender  # factorial variable
+# dataset <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/learning2014.txt", sep=",", header=TRUE)
 
-
-dim(dataset) # the dimension of the dataset is (166,7)
-summary(dataset)  
+dim(dataset2) # the dimension of the dataset is (166,7)
+summary(dataset2)  
 # the summary of the dataset reveal the minimum, mean, 1st Qu, median, mean, 3rd Qu and maximum of the data. Using the hist function we can also
 # observe the distribution of the variables. For instance, variable 'stra' is a normally ditributed (mean = 3.121, min = 1.25, max= 5) 
 # while the variable 'Age' is skewed (mean = 25.51, min = 17, max= 55). 
@@ -66,11 +58,11 @@ hist(points)
 
 # we can also use the 
 # check the correlation between the variables 
-cor.test(points, Age)
+cor.test(points, age)
 
 
 #
-model1 <- lm(points ~ Attitude + Age)
+model1 <- lm(points ~ attitude + age)
 summary(model1)
 layout(matrix(c(1,2,3,4),2,2))
 plot(model1)
