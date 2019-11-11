@@ -29,19 +29,16 @@ dataset1
 
 dataset1[points==0] <- NA
 dataset2 <- dataset1[complete.cases(dataset1),]
-# Deep <- lrn14$Deep
-# Stra <- lrn14$Stra
-# Surf <- lrn14$Surf
 write.csv(dataset2, file = "data.csv", quote = TRUE, row.names = F)
 
 
 # Data Analysing
-# #reading the data
 
 # dataset <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/learning2014.txt", sep=",", header=TRUE)
 
 dim(dataset2) # the dimension of the dataset is (166,7)
 summary(dataset2)  
+
 # the summary of the dataset reveal the minimum, mean, 1st Qu, median, mean, 3rd Qu and maximum of the data. Using the hist function we can also
 # observe the distribution of the variables. For instance, variable 'stra' is a normally ditributed (mean = 3.121, min = 1.25, max= 5) 
 # while the variable 'Age' is skewed (mean = 25.51, min = 17, max= 55). 
@@ -59,12 +56,22 @@ hist(points)
 # we can also use the cor.test function to assess the correlation between the variables
 # check the correlation between the variables 
 cor.test(attitude, age)
-# for example, the results checking the correlation between the age and attitude reveal that the correlation between these two variables are 
+# for example, the results checking the correlation between the age and attitude reveal that the correlation between these two variables is 
+# not significant
 # 
 
-#
+# we check the relationship between the output 'points' and two input variables 'attitude' and 'age'
 model1 <- lm(points ~ attitude + age)
 summary(model1)
-# after checking the model we 
+# after checking the model we produce the diagnostic plots 
 layout(matrix(c(1,2,3,4),2,2))
 plot(model1)
+
+
+# after we see that the input 'age' has no statistically significant relationship with the output, we 
+# remove it and refit the model
+model2 <- lm(points ~ attitude)
+summary(model2)
+# after checking the model we produce the diagnostic plots 
+layout(matrix(c(1,2,3,4),2,2))
+plot(model2)

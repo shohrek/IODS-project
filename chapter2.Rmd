@@ -14,19 +14,25 @@ This week, the bulk of the things I have learnt have centerd around the the intr
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = F)
 ```
 
 # Session II
 
+## Data wrangling
+
+
 The focus of this learninig session was on regression analysis. At initial step, to prepare the data for the analysis we needed to go through a **data wrangling** process. The target of the study from which the data has been analyzed was investigating the effect of learning approaches, *e.g.* suarface approach (in which students memorize the content of the course without understanding) on students' achievements and performance. Here is the link to the data <https://www.mv.helsinki.fi/home/kvehkala/JYTmooc/JYTOPKYS3-data.txt>. The steps taken in data wrangling consisted of:
 
  **1.** creating a data set with the variables age, gender, attitude, deep, stra, surf, and points. While the variable 'points' exihibit the output (students' points in the exam), other variables are considered as the input. The variables 'deep', 'stra', and 'surf' were the results of the sum of some subscales. 
+ 
  **2.** taking the mean of the sum of the subscales by deviding the sum to the number of elements (subscales). This step was taken to scale the combination variables such as 'deep' to their original scale. 
+ 
  **3.** excluding the observations where the variable 'points' were zero. 
+ 
  **4.** saving the wrangled data in a csv file. 
  
-```{r}
+```{r, echo=FALSE}
 
 lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
 
@@ -58,17 +64,18 @@ write.csv(dataset2, file = "data.csv", quote = TRUE, row.names = F)
 
 ```
 
-## 
+## Data analysis
 
 
 Following the data wrangling process, the resultant dataset **dataset2** was read and some features of the dataset including its dimension and structure were investigated. The dimension of the dataset is (166,7); the number of rows show the number of subjects while the number of columns demonstrate the variables (inputs and output). After using the **summary**, some information such as minimum, maximum, and mean of of the variables can be obtained. Besides, we can check the distribution of the variables and their relation with the use of the following function: 
 
 **1.** *hist* to check the distribution of the data
+
 **2.** *cor.test* to check the correlation between the variables. 
 
 
 
-## To check the distribution of the input variables of numeric type
+### Distribution of the input variables of numeric type
 ```{r}
 layout(matrix(c(1,2,3,4,5,6),3,2))
 hist(age)
@@ -80,16 +87,49 @@ hist(points)
 ```
 
 
-## R Markdown 
+### Regression 
 
 
-Using the **lm(output~inupt)** and **plot** functions, we can receive information on the relation between the output and inputs. To examine the model, we use the function 'summary'.  We see that the points are significantly predicted by the variable 'attitude' (*b* = , *p* < 0.001). However, the output is not predicted by the variable 'age' (*p* = 0.256). 
-
-(b = 􀀀3:3; t(221) = 􀀀5:17; p <
-:001)
-
-## R Markdown
+Using the **lm(output~inupt)** and **plot** functions, we can receive information on the relation between the output and inputs. To examine the model, we use the function 'summary'.  We see that the points are significantly predicted by the variable 'attitude' (*p* < 0.001). However, the output is not predicted by the variable 'age' (*p* = 0.256). The model fit is good (*F(2,180)* = 12.44; *p* < 0.001, adjusted R²= 0.1116).
 
 
+```{r echo=TRUE}
+model1 <- lm(points ~ attitude + age)
+summary(model1)
+```
+
+Since the variable 'age' does not have a statistically significant relationship with the output 'points', we will remove it and fit the model again. 
+
+```{r echo=TRUE}
+model2 <- lm(points ~ attitude)
+summary(model2)
+```
+As we can see, removing the variable 'age', improves the model fit (*F(1,181)* = 23.54; *p* < 0.001, adjusted R²= 0.1102). 
+
+### Diagnostic plots
+
+
+We can check diagnostic plots by using the function **plot**:
+
+**Q-Q** plots: these plots reveal the information on the normality of the data. 
+
+**Residuals and Fitted** plots: the variances need to be homogenous and this can be checked through these plots.
+
+**Residuals and Leverage** plots: thses plots are used to show the influential cases by using the Cook's distance line. 
+
+**Scale-Location** plots: to check whether the residuals are spread equally along the predictor range, we can make use of these plots.
+
+
+```{r echo=TRUE}
+layout(matrix(c(1,2,3,4),2,2))
+plot(model2)
+```
+
+From the plots above, we notice that the predictor variable 'attitude' is almost normally distributed with slight skewness to the right. The residuals (difference between the observed value of the output (points in this study) and the predicted ones) show good fit. Assesing the Scale-Location, since the red line is approximately horizontal, then the average magnitude of the standardized residuals is not changing much as a function of the fitted values. Inspecting the Residuals vs leverage plots demonstrates that few samples show tendencies of outliers. However, from the boxplot, this has not been observed. 
+
+```{r echo=TRUE}
+boxplot(attitude)
+title('Boxplot of Attitude')
+```
 
 
