@@ -1,30 +1,33 @@
 # Shohreh, UEF, 2019, Exercise II
 
-# reading the data into memory
+# use ?read.csv to read the file. We also added the argument header=TRUE to have the headers 
 lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
 
-# Checking the dimensions of the data
-DimData <- dim(lrn14)
+# Check the dimensions of the data
 
-# Access the dplyr library
-# library(dplyr)
+DimData <- dim(lrn14) # the result shows the dimension of the data is (183,60)
+
+
+# Check the dimensions of the data 
+
+str(lrn14) # the structure of the variables are integer exept for the variable 'gender' which is a factor variable
 
 
 # Deep <- c("D03", "D11", "D19", "D27", "D07", "D14", "D22", "D30","D06",  "D15", "D23", "D31")
 # Surf <- c("SU02", "SU18", "SU26", "SU05", "SU13", "SU21", "SU29", "SU08","SU16",  "SU24", "SU32")
 
-Deep <- (lrn14$D03 + lrn14$D11 + lrn14$D19 + lrn14$D27 + lrn14$D07 + lrn14$D14 + lrn14$D22 + lrn14$D30 + lrn14$D06 + lrn14$D15+ lrn14$D15+ lrn14$D23+ lrn14$D31)/12
-Surf <- (lrn14$SU02 + lrn14$SU18 + lrn14$SU26 + lrn14$SU05 + lrn14$SU13 + lrn14$SU21 + lrn14$SU29 + lrn14$SU08 + lrn14$SU16 + lrn14$SU24+ lrn14$SU32)/11
-Stra <- (lrn14$ST04 + lrn14$ST12 + lrn14$ST20 + lrn14$ST28 + lrn14$ST01 + lrn14$ST09 + lrn14$ST17 + lrn14$ST25)/8 
-Gender <- lrn14$gender
-Age <- lrn14$Age
-Attitude <- lrn14$Attitude
+deep <- (lrn14$D03 + lrn14$D11 + lrn14$D19 + lrn14$D27 + lrn14$D07 + lrn14$D14 + lrn14$D22 + lrn14$D30 + lrn14$D06 + lrn14$D15+ lrn14$D15+ lrn14$D23+ lrn14$D31)/12
+surf <- (lrn14$SU02 + lrn14$SU18 + lrn14$SU26 + lrn14$SU05 + lrn14$SU13 + lrn14$SU21 + lrn14$SU29 + lrn14$SU08 + lrn14$SU16 + lrn14$SU24+ lrn14$SU32)/11
+stra <- (lrn14$ST04 + lrn14$ST12 + lrn14$ST20 + lrn14$ST28 + lrn14$ST01 + lrn14$ST09 + lrn14$ST17 + lrn14$ST25)/8 
+gender <- lrn14$gender
+age <- lrn14$Age
+attitude <- lrn14$Attitude
 points <- lrn14$Points
 
-Questions <- cbind(Deep,Surf,Stra,Gender,Age,Attitude,points)
+Questions <- cbind(deep,surf,stra,gender,age,attitude,points)
 Questions
 
-Questions[Questions==0] <- NA
+Questions[Questions$points==0] <- NA
 Questions2 <- Questions[complete.cases(Questions),]
 # Deep <- lrn14$Deep
 # Stra <- lrn14$Stra
@@ -32,10 +35,39 @@ Questions2 <- Questions[complete.cases(Questions),]
 write.csv(Questions2, file = "data.csv", quote = TRUE, row.names = F)
 
 
-#Data Analysing
-##Reading the data
+# Data Analysing
+# #reading the data
 dataset <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/learning2014.txt", sep=",", header=TRUE)
-summary(dataset)
+
+age <- lrn14$age
+points <- lrn14$points
+attitude <- lrn14$attitude
+deep <- lrn14$deep
+stra <- lrn14$stra
+surf <- lrn14$surf
+gender <- lrn14$gender  # factorial variable
+
+
+dim(dataset) # the dimension of the dataset is (166,7)
+summary(dataset)  
+# the summary of the dataset reveal the minimum, mean, 1st Qu, median, mean, 3rd Qu and maximum of the data. Using the hist function we can also
+# observe the distribution of the variables. For instance, variable 'stra' is a normally ditributed (mean = 3.121, min = 1.25, max= 5) 
+# while the variable 'Age' is skewed (mean = 25.51, min = 17, max= 55). 
+
+
+# check the  ditribution of the variables using the hist function
+layout(matrix(c(1,2,3,4,5,6),3,2))
+hist(age)  # the variable 'age' is skewed
+hist(attitude)  # the variable 'attitude' is normal
+hist(deep) 
+hist(stra)  
+hist(surf)  
+hist(points)
+
+# we can also use the 
+# check the correlation between the variables 
+cor.test(points, Age)
+
 
 #
 model1 <- lm(points ~ Attitude + Age)
