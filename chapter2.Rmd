@@ -58,13 +58,15 @@ write.csv(dataset2, file = "data.csv", quote = TRUE, row.names = F)
 
 ```
 
-## R Markdown 
+## 
 
 
 Following the data wrangling process, the resultant dataset **dataset2** was read and some features of the dataset including its dimension and structure were investigated. The dimension of the dataset is (166,7); the number of rows show the number of subjects while the number of columns demonstrate the variables (inputs and output). After using the **summary**, some information such as minimum, maximum, and mean of of the variables can be obtained. Besides, we can check the distribution of the variables and their relation with the use of the following function: 
 
 **1.** *hist* to check the distribution of the data
 **2.** *cor.test* to check the correlation between the variables. 
+
+
 
 ## To check the distribution of the input variables of numeric type
 ```{r}
@@ -84,11 +86,8 @@ hist(points)
 Following the data wrangling process, the resultant dataset **dataset2** was read and some features of the dataset including its dimension and structure were investigated. The dimension of the dataset is (166,7); the number of rows show the number of subjects while the number of columns demonstrate the variables (inputs and output). After using the **summary**, some information such as minimum, maximum, and mean of of the variables can be obtained.Using the **lm(output~inupt)** and **plot** functions, we can receive information on the relation between the output and inputs. Besides, we can check the distribution of the variables and their relation with the use of the following function:
 
 ## R Markdown
-#cor.test(Performance, Hours)
 
 
 
-For example:
 
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
