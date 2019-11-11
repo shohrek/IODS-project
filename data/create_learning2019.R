@@ -56,13 +56,15 @@ hist(stra)
 hist(surf)  
 hist(points)
 
-# we can also use the 
+# we can also use the cor.test function to assess the correlation between the variables
 # check the correlation between the variables 
-cor.test(points, age)
-
+cor.test(attitude, age)
+# for example, the results checking the correlation between the age and attitude reveal that the correlation between these two variables are 
+# 
 
 #
 model1 <- lm(points ~ attitude + age)
 summary(model1)
+# after checking the model we 
 layout(matrix(c(1,2,3,4),2,2))
 plot(model1)

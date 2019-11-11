@@ -83,7 +83,10 @@ hist(points)
 ## R Markdown 
 
 
-Following the data wrangling process, the resultant dataset **dataset2** was read and some features of the dataset including its dimension and structure were investigated. The dimension of the dataset is (166,7); the number of rows show the number of subjects while the number of columns demonstrate the variables (inputs and output). After using the **summary**, some information such as minimum, maximum, and mean of of the variables can be obtained.Using the **lm(output~inupt)** and **plot** functions, we can receive information on the relation between the output and inputs. Besides, we can check the distribution of the variables and their relation with the use of the following function:
+Using the **lm(output~inupt)** and **plot** functions, we can receive information on the relation between the output and inputs. To examine the model, we use the function 'summary'.  We see that the points are significantly predicted by the variable 'attitude' (*b* = , *p* < 0.001). However, the output is not predicted by the variable 'age' (*p* = 0.256). 
+
+(b = 􀀀3:3; t(221) = 􀀀5:17; p <
+:001)
 
 ## R Markdown
 
