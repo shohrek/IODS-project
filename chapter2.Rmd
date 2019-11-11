@@ -73,7 +73,7 @@ Following the data wrangling process, the resultant dataset **dataset2** was rea
 layout(matrix(c(1,2,3,4,5,6),3,2))
 hist(age)
 hist(attitude)
-hist(deep)
+hist(deep) 
 hist(stra)
 hist(surf)
 hist(points)

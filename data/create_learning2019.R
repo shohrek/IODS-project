@@ -68,3 +68,4 @@ summary(model1)
 # after checking the model we 
 layout(matrix(c(1,2,3,4),2,2))
 plot(model1)
+
