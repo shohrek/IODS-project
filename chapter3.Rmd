@@ -1,0 +1,23 @@
+---
+title: "chapter3"
+author: "shohreh"
+date: "12 marraskuuta 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data reading
+
+To read the dataset, I have used the data used as a .csv file after data wrangling 'dataIII'.
+
+
+```{r, echo = TRUE}
+alc <- read.csv('E:/PhD/Courses/Open Data/IODS-project/data/dataIII.csv', header=T, sep=",",row.names=NULL)
+dim(alc)
+```
+
+
+
