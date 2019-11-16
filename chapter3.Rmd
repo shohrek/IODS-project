@@ -17,7 +17,50 @@ To read the dataset, I have used the data used as a .csv file after data wrangli
 ```{r, echo = TRUE}
 alc <- read.csv('E:/PhD/Courses/Open Data/IODS-project/data/dataIII.csv', header=T, sep=",",row.names=NULL)
 dim(alc)
+colnames(alc)
+```
+After investigating the dimension and variables in the dataset, we realize that it consists of  382 observations with 35 variables, e.g., school, activities, and absences. The data that have been acquired from two secondary schools in Portugal is about the performance of students. Four variables 'famrel','goout','health',and 'G1' have been selected to assess their relationship with the target variable 'high_use'. My personal hypothesises about the variables are as follows:
+
+**1.** *farmel* The better the family relationships are, the less the use of alcohol will be. 
+
+**2.** *goout* The more the student goes out with her/his friends, the more the alcohol use will be. 
+
+**3.** *health* The better the health status is, the less the alcohol use will be. 
+
+**4.** *G3* The better the final grade is, the less the alcohol use will be. 
+
+```{r, echo = TRUE}
+farmel <- alc$famrel
+goout <- alc$goout
+health <- alc$health
+G3 <- alc$G3
+summary(farmel)
+summary(goout)
+summary(health)
+summary(G3)
+
 ```
 
+```{r, echo = TRUE}
+if (!require('ggplot2')) 
+{
+  install.packages('ggplot2');
+  library(ggplot2);
+}
+#install.packages("ggplot2")
+#library(ggplot2)
+g1 <- ggplot(alc, aes(x = high_use, y = farmel, col = sex))
+g1 + geom_boxplot() + ylab("Family relationship")
+
+g1 <- ggplot(alc, aes(x = high_use, y = goout, col = sex))
+g1 + geom_boxplot() + ylab("Going out")
+
+g1 <- ggplot(alc, aes(x = high_use, y = health, col = sex))
+g1 + geom_boxplot() + ylab("Health")
+
+g1 <- ggplot(alc, aes(x = high_use, y = G3, col = sex))
+g1 + geom_boxplot() + ylab("Final Grade")
+
+```
 
 
