@@ -60,7 +60,17 @@ g1 + geom_boxplot() + ylab("Health")
 
 g1 <- ggplot(alc, aes(x = high_use, y = G3, col = sex))
 g1 + geom_boxplot() + ylab("Final Grade")
-
 ```
+The boxplots represents the min, max, median, first quartile, and the third quartile  of the observations. 
+
+#
+```{r, echo = TRUE}
+model1 <- glm(high_use ~ farmel + goout + health + G3, data = alc,family = binomial(link="logit"))
+summary(model1)
+```
+z values higher than 2 indicate the significance in regression output, meaning that the corresponding variable is significant. This can be also reflected by p values (confidence interval). With respect to this point,*the variables farmel (p = 0.01) and goout (p < 0.05) are signifant.* The coefficient of the variable 'farmel' shows that an increase in this variable is associated with a decrease in the log odds of the variable high_use by 0.388 units (meaning better family relationship reduces the probability of high alcohol use). Furthermore, the increase of the variable 'gooout' is associated with an increase in the log odds of the output by 0.785 units (implying that the more the students go out with their peers, the higher the probability of their high alcohol use will be).
+
+
+
 
 
