@@ -1,9 +1,3 @@
----
-title: "chapter3"
-author: "shohreh"
-date: "12 marraskuuta 2019"
-output: html_document
----
 # Session III
 
 ## Data reading
