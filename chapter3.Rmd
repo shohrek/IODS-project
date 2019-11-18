@@ -1,6 +1,6 @@
-# Session III
 
-## Data reading
+
+## Session III
 
 To read the dataset, I have used the data used as a .csv file after data wrangling 'dataIII'.
 
