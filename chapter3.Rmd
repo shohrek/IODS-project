@@ -4,10 +4,7 @@ author: "shohreh"
 date: "12 marraskuuta 2019"
 output: html_document
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+# Session III
 
 ## Data reading
 
@@ -21,23 +18,24 @@ colnames(alc)
 ```
 After investigating the dimension and variables in the dataset, we realize that it consists of  382 observations with 35 variables, e.g., school, activities, and absences. The data that have been acquired from two secondary schools in Portugal is about the performance of students. Four variables 'famrel','goout','health',and 'G1' have been selected to assess their relationship with the target variable 'high_use'. My personal hypothesises about the variables are as follows:
 
-**1.** *farmel* The better the family relationships are, the less the use of alcohol will be. 
+**1.farmel** The better the family relationships are, the less the use of alcohol will be. 
 
-**2.** *goout* The more the student goes out with her/his friends, the more the alcohol use will be. 
+**2.goout** The more the student goes out with her/his friends, the more the alcohol use will be. 
 
-**3.** *health* The better the health status is, the less the alcohol use will be. 
+**3.health** The better the health status is, the less the alcohol use will be. 
 
-**4.** *G3* The better the final grade is, the less the alcohol use will be. 
+**4.G3** The better the final grade is, the less the alcohol use will be. 
+
 
 ```{r, echo = TRUE}
-farmel <- alc$famrel
-goout <- alc$goout
-health <- alc$health
-G3 <- alc$G3
-summary(farmel)
-summary(goout)
-summary(health)
-summary(G3)
+FamilyRelation <- alc$famrel
+GoingOut <- alc$goout
+Health <- alc$health
+Grade <- alc$G3
+summary(FamilyRelation)
+summary(GoingOut)
+summary(Health)
+summary(Grade)
 
 ```
 
@@ -49,23 +47,23 @@ if (!require('ggplot2'))
 }
 #install.packages("ggplot2")
 #library(ggplot2)
-g1 <- ggplot(alc, aes(x = high_use, y = farmel, col = sex))
+g1 <- ggplot(alc, aes(x = high_use, y = FamilyRelation, col = sex))
 g1 + geom_boxplot() + ylab("Family relationship")
 
-g1 <- ggplot(alc, aes(x = high_use, y = goout, col = sex))
+g1 <- ggplot(alc, aes(x = high_use, y = GoingOut, col = sex))
 g1 + geom_boxplot() + ylab("Going out")
 
-g1 <- ggplot(alc, aes(x = high_use, y = health, col = sex))
+g1 <- ggplot(alc, aes(x = high_use, y = Health, col = sex))
 g1 + geom_boxplot() + ylab("Health")
 
-g1 <- ggplot(alc, aes(x = high_use, y = G3, col = sex))
+g1 <- ggplot(alc, aes(x = high_use, y = Grade, col = sex))
 g1 + geom_boxplot() + ylab("Final Grade")
 ```
 The boxplots represents the min, max, median, first quartile, and the third quartile  of the observations. 
 
 #
 ```{r, echo = TRUE}
-model1 <- glm(high_use ~ farmel + goout + health + G3, data = alc,family = binomial(link="logit"))
+model1 <- glm(high_use ~ FamilyRelation + GoingOut + Health + Grade, data = alc,family = binomial(link="logit"))
 summary(model1)
 ```
 z values higher than 2 indicate the significance in regression output, meaning that the corresponding variable is significant. This can be also reflected by p values (confidence interval). With respect to this point,*the variables farmel (p = 0.01) and goout (p < 0.05) are signifant.* The coefficient of the variable 'farmel' shows that an increase in this variable is associated with a decrease in the log odds of the variable high_use by 0.388 units (meaning better family relationship reduces the probability of high alcohol use). Furthermore, the increase of the variable 'gooout' is associated with an increase in the log odds of the output by 0.785 units (implying that the more the students go out with their peers, the higher the probability of their high alcohol use will be).
