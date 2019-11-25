@@ -1,0 +1,141 @@
+# Chapter IV
+
+### Exploring "Boston" dataset 
+
+The dataset `Boston` has been retrieved from a study conducted by Harisson and Rubinfeld (1978) based on which a model was proposed to measure the tendency of the potential buyers to pay for the clean air. In parallel, the dataset provides us with the information regarding the crime rate (crim), nitrogen oxides concentration (nox), the percentage of individuals with low sociaeconomical status, and other variables that their descriptions can be found in the following link:  <https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/Boston.html>.
+
+Checking the structure and dimension of the dataset, it was depicted that the dataset consists of 506 rows as observations and 17 columns as predictors.  
+
+```{r, echo = FALSE}
+library(MASS)
+data(Boston)
+head(Boston)
+```
+
+```{r, echo = TRUE}
+summary(Boston)
+dim(Boston)
+str(Boston)
+```
+
+### Summaries of variables
+
+The summary of the dataset revealed the following information on the variables>
+```{r, echo = TRUE}
+summary(Boston)
+```
+Since not all the variables are of the same importance, a subset of predictors such as `crim`, `medv`, and `nox` have been selected to show on the plot. The matrix diagonal depicts the density of the selected variables. As illustrated in the matrix, the distribution of the variable crim, shows its dispertion at zero value, while the variable medv has assymetric distribution. 
+
+```{r, echo=FALSE}
+#install.packages('car', dependencies=TRUE, repos='http://cran.rstudio.com/')
+library(car)
+scatterplotMatrix(~ crim + dis + medv + nox + rm, regLine = list(col = 2),
+                       col = 1, smooth = list(col.smooth = 4, col.spread = 4),
+                       data = Boston)
+```
+We can also check the correlation between the variables as follows:
+
+```{r, echo=FALSE}
+#install.packages("corrplot")
+library(corrplot)
+```
+
+```{r, echo=FALSE}
+corr_matrix<-cor(Boston)
+corrplot(corr_matrix, type="upper")
+```
+
+### Standardization of variables
+
+As it has been observed earlier, some data points (outliers) in the variables cause the non-normal distribution. To overcome this issue, Z-score standardization has been implemented so that the data will have `mean = 0` and `standard deviation = 1`. Furthermore, Normal distribution is a precondition of our further processing, that is, LDA. Following standardization of the data variables, we check the summary of the scaled data. 
+
+```{r, echo=FALSE}
+Boston$crim_scale<-scale(Boston$crim)
+Boston$zn_scaled<-scale(Boston$zn)
+Boston$indus_scaled<-scale(Boston$indus)
+Boston$chas_scaled<-scale(Boston$chas)
+Boston$nox_scaled<-scale(Boston$nox)
+Boston$rm_scaled<-scale(Boston$rm)
+Boston$age_scaled<-scale(Boston$age)
+Boston$dis_scaled<-scale(Boston$dis)
+Boston$rad_scaled<-scale(Boston$rad)
+Boston$tax_scaled<-scale(Boston$tax)
+Boston$ptratio_scaled<-scale(Boston$ptratio)
+Boston$black_scaled<-scale(Boston$black)
+Boston$lstat_scaled<-scale(Boston$lstat)
+Boston$medv_scaled<-scale(Boston$medv)
+dataset1 <- cbind(Boston$crim_scale,Boston$zn_scaled,Boston$indus_scaled,Boston$chas_scaled,Boston$nox_scaled,Boston$rm_scaled,Boston$age_scaled,Boston$dis_scaled,Boston$rad_scaled,Boston$tax_scaled,Boston$ptratio_scaled,Boston$black_scaled,Boston$lstat_scaled,Boston$medv_scaled)
+dataset1=as.data.frame(dataset1)
+
+colnames(dataset1) <- c("crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","black","lstat","medv")
+
+summary(dataset1)
+```
+
+Here, we create a categorical variable of crim. This new categorical `crime` will be replaced at the following step by the old variable `crim`. 
+
+
+```{r, echo=FALSE}
+summary(Boston$crim_scale)
+bins <- quantile(Boston$crim_scale)
+crime <- cut(Boston$crim_scale, breaks = bins, include.lowest = TRUE, labels = c("low", "med_low", "med_high", "high"))
+crime = as.data.frame(crime)
+colnames(crime[1]) = "bar"
+table(crime)
+
+```
+
+The new dataset has been formed using the variable crime.
+
+```{r, echo=FALSE}
+#Boston$crim_scale <- dplyr::select(Boston$crim_scale, -crim)
+library(dplyr)
+#dataset2 = as.data.frame(dataset1)
+boston_scaled <- dplyr::select(dataset1,-one_of(c('crim')))
+boston_scaled <- data.frame(boston_scaled, crime)
+```
+To implement the LDA analysis, we need to devide our new dataset into two parts with 80% belonging to the train set.
+
+```{r, echo=FALSE}
+n <- nrow(boston_scaled)
+ind <- sample(n,  size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+```
+
+### Linear Discriminant Analysis
+
+Here, as we target to describe what qualities in a crime rate variable contributes to whether the crime rate is 'low', 'med-low', 'high', or 'med-high', we fit the LDA analysis on our train dataset.     
+
+```{r, echo=FALSE}
+correct_classes <- test$crime
+test <- dplyr::select(test, -crime)
+lda.fit <- lda(crime ~ ., data = train)
+
+# the function for lda biplot arrows
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "orange", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+
+# target classes as numeric
+classes <- as.numeric(train$crime)
+
+# plot the lda results
+plot(lda.fit, dimen = 2, col = classes, pch = classes)
+lda.arrows(lda.fit, myscale = 1)
+
+# lda.fit, correct_classes and test are available
+
+# predict classes with test data
+lda.pred <- predict(lda.fit, newdata = test)
+
+# cross tabulate the results
+table(correct = correct_classes, predicted = lda.pred$class)
+```
+
+
