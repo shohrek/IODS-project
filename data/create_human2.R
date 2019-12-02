@@ -16,7 +16,9 @@ head(human1)
 dim(human1)
 str(human1)
 
-# The dataset 'human' is regarding a dataset with the dimension of (195,9) in which 
+# The dataset 'human' is regarding a dataset with the dimension of (195,9) in which Human development index (HDI)
+# has been investigated, compromising subset of variables. HDI has been proposed as a measure to stress on the people and their capabilities as 
+# the assessment tool of development of a country not only the economic state of the country. 
 
 # Question 1
 # Turning GNI to numeric

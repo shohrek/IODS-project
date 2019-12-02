@@ -1,8 +1,8 @@
 ## Session V
 
-#### **Importing the data**
+#### Importing the data
 
-In this session, we intened to perform the principle component analysis (PCA) on the dataset ´human2´. Here is the link for the daaset: <http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human2.txt>.
+In this session, we intened to perform the principle component analysis (PCA) on the dataset ?human2?. Here is the link for the daaset: <http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human2.txt>.
 
 
 ```{r, echo = FALSE}
@@ -15,13 +15,13 @@ names(human2)
 head(human2)
 summary(human2)
 ```
-##### Correlation
+##### *Correlation*
 
 The correlation matrix is of high importance in PCA analysis. Indeed, in PCA the most essential features (dimension) of a dataset are extracted and one of the main assumptions is that many features contribute to the same underlying dimension. Some features might contribute to the same To asses the relationship between the different variables, the correlation plots were used. The following figure summarized the results. As it can be observed, there was a strong, positive correlation between the two variables 'Life.Exp' and 'Edu.Exp'(r = 0.789), meaning that the increase in schooling years is correlated with increase in life expectancy. Furthermore, the results demonstrated a strong negative correlation between 'Life.Exp' and 'Mat.Mor'(r = 0.857), indicating that the increase in maternal mortality ratio was correlated with decrease in life expectancy. As it will be shown later, high correlations are of high importance in PCA. 
 
-##### Distribution
+##### *Distribution*
 
-Distribution of the variables can be observed in the figure. 
+Distribution of the variables can be observed in the figure. While some variables including GNI and Mat.Mor are positive skewed, other variables are negatively skewed or normal distributed. The distribution (the mean and the standard deviation of the variables) are also another important factor in PCA. 
 
 
 ```{r, echo = FALSE,  message=FALSE}
@@ -36,10 +36,11 @@ ggpairs(human2)
 cor(human2) %>% corrplot
 ```
 
-### Performing PCA
+#### **Question II: Performing PCA on non-standardized dataset** 
 
-First we perform the PCA analysis using the original (non-standardized) dataset. 
-
+First we perform the PCA analysis using the original (non-standardized) dataset. PCA biplots are frequently used to show the component scores and variable loading. The bottom axis represents the PC1 scores, while the left, top and left axes depict the PC2 scores, loading on PC1, and loading on PC2, respectively. The scores depict the observations in two dimensions, while the vectors show the original dimensions and their relationship with respect to each other and other PCs. Further the vectors are from the PC origin, the more the standard deviation of the feature is. 
+Also, the angle between the vectors (including each variable and a PC axis) reveals information on correlation between the variables. If the angle between the vectors is small, their corresponding variables are highly correlated. If the angle is close to 90 degree, it implies that there is no correlation between the variables, while the angle close to 180 degrees shows a negative correlation. Since the highly correlated variables might be traced back to the same underlying component, they can be reduced to principle components. 
+ 
 ```{r, echo = FALSE,  message=FALSE, warning=FALSE}
 pca_human_nscale <- prcomp(human2, scale=FALSE)
 names(pca_human_nscale)
@@ -51,8 +52,9 @@ pc_lab1 <- paste0(names(pca_pr_nscale), " (", pca_pr_nscale, "%)")
 biplot(pca_human_nscale, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab1[1], ylab = pc_lab1[2])
 ```
 
-## Including Plots
+#### **Question III: Performing PCA on standardized dataset** 
 
+PCA is performed to reduce dimension and this is performed via identifying the principle components. Based on PCA, the vectors (directions) with the largest variances are the features with the highest importance. Hence, if there are various variables with various variance, PCA loads on the ones with the largest variance. Furthermore, in dataset like the human dataset, the variables have been measured in different scales. Thereby, to avoid the output being affected by these issues and make the variables comparable, standardization is an essential step to be taken prior to applying to PCA. For instance, we can see from the figures that the PCA on the non-standardized dataset gives the loading on one variable. 
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 human_std <- scale(human2)
@@ -66,5 +68,45 @@ biplot(pca_human_scale, main="PCA_Scaled dataset",cex = c(0.8, 1), col = c("grey
 biplot(pca_human_nscale, main="PCA_non-Scaled dataset", cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab1[1], ylab = pc_lab1[2])
 ```
 
+#### **Question IV: Interpretation of the PCA** 
 
+Having the following variables in the dataset, we can see that there are some countries having higher rate of each of these variables. Those variables along the first PC (horizontal line) makes up the 53.6 % of the data and those along the second PC (vertical line) makes up 16.2 % of it. 
+ 
+"Country" = Country name
+"GNI" = Gross National Income per capita
+"Life.Exp" = Life expectancy at birth
+"Edu.Exp" = Expected years of schooling 
+"Mat.Mor" = Maternal mortality ratio
+"Ado.Birth" = Adolescent birth rate
+"Parli.F" = Percetange of female representatives in parliament
+"Edu2.F" = Proportion of females with at least secondary education
+"Edu2.M" = Proportion of males with at least secondary education
+"Labo.F" = Proportion of females in the labour force
+"Labo.M" " Proportion of males in the labour force
+"Edu2.FM" = Edu2.F / Edu2.M
+"Labo.FM" = Labo2.F / Labo2.M
 
+Along the first PC, the countries on the positive side have higher gross national income, life expectancy, expected years of schooling, and ratio of expected years of schooling in females. Whereas, those countries on the negative side have higher maternal mortality ration and adolscent birth rate.
+
+Along the second PC, the countries towrds the positive side have higher percentage of female representatives in parliament and higher ratio of proportion of females to males in labour force. 
+
+#### **Question V** 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(FactoMineR)
+library(tidyr)
+data(tea)
+keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
+tea_time <- select(tea, one_of(keep_columns))
+summary(tea_time)
+str(tea_time)
+gather(tea_time) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+mca <- MCA(tea_time, graph = FALSE)
+summary(mca)
+plot(mca, invisible=c("ind"), habillage = "quali")
+```
+The MCA can be considered as a PCA method for dataset with more than two categorical variables to depict the similar observations (in one group) and the association between the categorical variables. Hence, the plot demonstrates the relationships between the categorical variables in Â´teaÂ´ dataset. 
+
+1) the more proximity might indicate the more similarity between the variables: those positioned on oppisite sides are negatively correlated. 
+
+2) the further the variables are from the origin the more they are distinctive.
