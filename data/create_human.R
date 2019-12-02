@@ -36,6 +36,7 @@ gii <- mutate(gii, Ratio_LFP =  LFPF/ LFPM)
 # New data frame
 
 human <- inner_join(hd, gii, by = "Country", copy = FALSE, suffix = c(".hd", ".gii"))
+human <- write.csv(human,'human.csv')
 
 
 

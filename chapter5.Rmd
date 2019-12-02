@@ -1,0 +1,70 @@
+## Session V
+
+#### **Importing the data**
+
+In this session, we intened to perform the principle component analysis (PCA) on the dataset ´human2´. Here is the link for the daaset: <http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human2.txt>.
+
+
+```{r, echo = FALSE}
+human2 <- read.table('http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human2.txt', header=T, sep=",")
+
+```
+#### **Question I: Showing the graphical overview of the dataset**
+```{r, echo = FALSE}
+names(human2)
+head(human2)
+summary(human2)
+```
+##### Correlation
+
+The correlation matrix is of high importance in PCA analysis. Indeed, in PCA the most essential features (dimension) of a dataset are extracted and one of the main assumptions is that many features contribute to the same underlying dimension. Some features might contribute to the same To asses the relationship between the different variables, the correlation plots were used. The following figure summarized the results. As it can be observed, there was a strong, positive correlation between the two variables 'Life.Exp' and 'Edu.Exp'(r = 0.789), meaning that the increase in schooling years is correlated with increase in life expectancy. Furthermore, the results demonstrated a strong negative correlation between 'Life.Exp' and 'Mat.Mor'(r = 0.857), indicating that the increase in maternal mortality ratio was correlated with decrease in life expectancy. As it will be shown later, high correlations are of high importance in PCA. 
+
+##### Distribution
+
+Distribution of the variables can be observed in the figure. 
+
+
+```{r, echo = FALSE,  message=FALSE}
+#install.packages("magrittr") # package installations 
+#install.packages("dplyr")    # alternative installation of the %>%
+library(magrittr) 
+library(dplyr) 
+library(GGally)
+library(ggplot2)
+library(corrplot)
+ggpairs(human2)
+cor(human2) %>% corrplot
+```
+
+### Performing PCA
+
+First we perform the PCA analysis using the original (non-standardized) dataset. 
+
+```{r, echo = FALSE,  message=FALSE, warning=FALSE}
+pca_human_nscale <- prcomp(human2, scale=FALSE)
+names(pca_human_nscale)
+pca_human_nscale
+s1 <- summary(pca_human_nscale)
+pca_pr_nscale <- round(100*s1$importance[2,], digits = 1) 
+pca_pr_nscale
+pc_lab1 <- paste0(names(pca_pr_nscale), " (", pca_pr_nscale, "%)")
+biplot(pca_human_nscale, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab1[1], ylab = pc_lab1[2])
+```
+
+## Including Plots
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+human_std <- scale(human2)
+pca_human_scale <- prcomp(human_std, scale=FALSE)
+s <- summary(pca_human_scale)
+pca_pr <- round(100*s$importance[2,], digits = 1) 
+pca_pr
+pc_lab <- paste0(names(pca_pr), " (", pca_pr, "%)")
+par(mfrow = c(1,2))
+biplot(pca_human_scale, main="PCA_Scaled dataset",cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab[1], ylab = pc_lab[2])
+biplot(pca_human_nscale, main="PCA_non-Scaled dataset", cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab1[1], ylab = pc_lab1[2])
+```
+
+
+
