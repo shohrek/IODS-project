@@ -1,0 +1,144 @@
+## Session VI
+
+## Importing the data ratsL
+
+In this session, we intened to conduct the analysis on the longitudinal dataset ´ratsL´ on which we performed data wrangling: 
+
+```{r, echo = FALSE}
+ratsL <- read.csv(file = 'E:/PhD/Courses/Open Data/IODS-project/ratsL.csv')
+ratsL <- within(ratsL, {
+  ID <- factor(ID)
+  Group <- factor(Group)
+})
+names(ratsL)
+str(ratsL)
+summary(ratsL)
+```
+
+#### Graphical display of dataset ratsL
+
+In the corresponding experiment, three groups of rats were put on three different diets. Over a period of 9 weeks, the weight of each rat was measured weekly in grams. Here, we can see the graphical display of the changes of weights of rats of different groups over the measurement time. 
+
+#### Figure 8.1
+
+```{r, echo = FALSE}
+library(ggplot2)
+p1 <- ggplot(ratsL, aes(x = Time, y = Weight, linetype = ID))
+p2 <- p1 + geom_line() + scale_linetype_manual(values = rep(1:10, times=4))
+p3 <- p2 + facet_grid(. ~ Group, labeller = label_both)
+p4 <- p3 + theme_bw() + theme(legend.position = "none")
+p5 <- p4 + theme(panel.grid.minor.y = element_blank())
+p6 <- p5 + scale_y_continuous(limits = c(min(ratsL$Weight), max(ratsL$Weight)))
+p6
+```
+\pagebreak
+
+
+#### Figure 8.2
+
+```{r, echo = FALSE}
+library(dplyr)
+n <- ratsL$WD %>% unique() %>% length()
+# Make a summary data:
+ratsS <- ratsL %>%
+  group_by(Group, WD) %>%
+  summarise( mean=mean(Weight), se=sd(Weight)/sqrt(n) ) %>%
+  ungroup()
+glimpse(ratsS)
+p1 <- ggplot(ratsS, aes(x = WD, y = mean, linetype = ratsL$ID, shape = Group))
+p2 <- p1 + geom_line() + scale_linetype_manual(values = c(1,2))
+p3 <- p2 + geom_point(size=3) + scale_shape_manual(values = c(1,2))
+p4 <- p3 + geom_errorbar(aes(ymin=mean-se, ymax=mean+se, linetype="1"), width=0.3)
+p5 <- p4 + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+p6 <- p5 + theme(legend.position = c(0.8,0.8))
+p7 <- p6 + scale_y_continuous(name = "mean(Weight) +/- se(Weight)")
+
+```
+\pagebreak
+
+
+#### Figure 8.3
+
+```{r, , echo = FALSE}
+p1 <- ggplot(ratsL, aes(x = Time, y = Weight, group = ID))
+p2 <- p1 + geom_line(aes(linetype = Group))
+p3 <- p2 + scale_x_continuous(name = "Time (days)", breaks = seq(0, 60, 10))
+p4 <- p3 + scale_y_continuous(name = "Weight (grams)")
+p5 <- p4 + theme_bw() + theme(legend.position = "top")
+p6 <- p5 + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+p6
+```
+\pagebreak
+
+
+#### Figure 8.4
+
+```{r}
+p1 <- ggplot(ratsL, aes(x = factor(WD), y = Weight, fill = Group))
+p2 <- p1 + geom_boxplot(position = position_dodge(width = 0.9))
+p3 <- p2 + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+p4 <- p3 + theme(legend.position = "bottom")
+p5 <- p4 + scale_x_discrete(name = "week")
+# Black & White version:
+#p6 <- p5 + scale_fill_grey(start = 0.5, end = 1)
+p5
+```
+\pagebreak
+
+#### Figure 8.5
+
+```{r, echo = FALSE}
+# Make a summary data of the diet weeks 
+ratsLWS <- ratsL %>%
+  group_by(Group, ID) %>% 
+  summarise( meanW=mean(Weight) ) 
+ 
+glimpse(ratsLWS)
+p1 <- ggplot(ratsLWS, aes(x = Group, y = meanW))
+p2 <- p1 + geom_boxplot()
+p3 <- p2 + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+p4 <- p3 + stat_summary(fun.y = "mean", geom = "point", shape=23, size=4, fill = "white")
+p5 <- p4 + scale_y_continuous(name = "mean(Weight), weeks")
+p5
+```
+\pagebreak
+
+#### Figure 8.6
+
+```{r, echo = FALSE}
+# Remove the outlier:
+# library(dplyr)
+rats1 = filter(ratsLWS, meanW >= 250  & meanW <= 550)
+glimpse(rats1)
+p1 <- ggplot(rats1, aes(x = Group, y = meanW))
+p2 <- p1 + geom_boxplot()
+p3 <- p2 + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+p4 <- p3 + stat_summary(fun.y = "mean", geom = "point", shape=23, size=4, fill = "white")
+p5 <- p4 + scale_y_continuous(name = "mean(Weight), weeks")
+p5
+```
+\pagebreak
+
+## Table 8.3
+
+```{r, echo = FALSE}
+# Without the outlier, apply Student's t-test, two-sided:
+fit <- aov(meanW ~ Group, data=rats1)
+summary(fit)
+```
+\pagebreak
+
+## Importing the data BPRSL
+
+In this session, we intened to conduct the analysis on the longitudinal dataset ´ratsL´ on which we performed data wrangling: 
+
+```{r, echo = FALSE}
+ratsL <- read.csv(file = 'E:/PhD/Courses/Open Data/IODS-project/ratsL.csv')
+ratsL <- within(ratsL, {
+  ID <- factor(ID)
+  Group <- factor(Group)
+})
+names(ratsL)
+str(ratsL)
+summary(ratsL)
+```
